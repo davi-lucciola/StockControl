@@ -1,0 +1,21 @@
+{
+    "product": {
+        "1": {
+            "name": "Coxinha",
+            "price": 3.9,
+            "amount": 2
+        }
+    },
+    "stock": {
+        "1": {
+            "product": "Coxinha",
+            "type": "INPUT",
+            "quantity": 2,
+            "date": {
+                "day": 3,
+                "month": 11,
+                "year": 2023
+            }
+        }
+    }
+}

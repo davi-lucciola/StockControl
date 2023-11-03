@@ -1,9 +1,15 @@
 from pydantic import BaseModel, Field
 
 
-class Product(BaseModel):
+class ProductBase(BaseModel):
     name: str
     price: float = Field(gt=0)
+
+class Product(BaseModel):
+    id: int
+    name: str
+    price: float
+    amount: int = 0
 
 class ProductFilter(BaseModel):
     name: str | None = None

@@ -1,21 +1,93 @@
 {
     "product": {
-        "1": {
-            "name": "Coxinha",
-            "price": 3.9,
-            "amount": 2
+        "90": {
+            "name": "Macaco usando macacao",
+            "price": 2012.0
+        },
+        "91": {
+            "name": "Macaco xuxu",
+            "price": 2012.0
+        },
+        "92": {
+            "name": "Macaco mineiro",
+            "price": 2012.0
+        },
+        "93": {
+            "name": "Macaco baiano",
+            "price": 2012.0
+        },
+        "94": {
+            "name": "Macaco nordestino",
+            "price": 2012.0
+        },
+        "95": {
+            "name": "Macaco sulista",
+            "price": 2012.0
+        },
+        "96": {
+            "name": "Macaco paulista",
+            "price": 2012.0
+        },
+        "97": {
+            "name": "Macaco gringo",
+            "price": 2012.0
+        },
+        "98": {
+            "name": "Macaco americano",
+            "price": 2012.0
+        },
+        "99": {
+            "name": "Macaco europeu",
+            "price": 2012.0
+        },
+        "100": {
+            "name": "Macaco latino",
+            "price": 2012.0
+        },
+        "101": {
+            "name": "Macaco jamaicano",
+            "price": 2012.0
+        },
+        "102": {
+            "name": "Macaco peregrino",
+            "price": 2012.0
+        },
+        "103": {
+            "name": "Macaco chileno",
+            "price": 2012.0
+        },
+        "104": {
+            "name": "Macaco africano",
+            "price": 2012.0
+        },
+        "105": {
+            "name": "Macaco argentino",
+            "price": 2012.0
+        },
+        "106": {
+            "name": "Macaco que estava no titanic (deprecated)",
+            "price": 2012.0
+        },
+        "107": {
+            "name": "Macaco profeta!",
+            "price": 1233.0
+        },
+        "108": {
+            "name": "Macaco afro-latino-americano-europeu",
+            "price": 2012.0
+        },
+        "109": {
+            "name": "Macaco",
+            "price": 1233.0
+        },
+        "110": {
+            "name": "Macaco doid\u00e3o",
+            "price": 2012.0
+        },
+        "111": {
+            "name": "Macaco de fone",
+            "price": 10000.0
         }
     },
-    "stock": {
-        "1": {
-            "product": "Coxinha",
-            "type": "INPUT",
-            "quantity": 2,
-            "date": {
-                "day": 3,
-                "month": 11,
-                "year": 2023
-            }
-        }
-    }
+    "stock": {}
 }

@@ -2,7 +2,22 @@
 
 Project with TinyDB for controlling stock of products.
 
-# How to run local
+## Endpoints
+
+For see all the documentation on swagger access `/docs` endpoint.
+
+- Product
+  - Search Products: GET    - `/product`
+  - Create Product : POST   - `/product`
+  - Update Product : PUT    - `/product/{id}`
+  - Delete Product : DELETE - `/product/{id}`
+  
+- Stock
+  - History Stock  : GET    - `/stock/history`
+  - Input Stock    : POST   - `/stock/in`
+  - Output Stock   : DELETE - `/stock/out`
+
+## How to run local
 
 ### With Python
 

@@ -1,20 +1,25 @@
 from typing import Literal
 from pydantic import BaseModel, Field
-from datetime import date, datetime as dt
+from datetime import datetime as dt, date
 
 
-class StockBase(BaseModel):
+class StockRegister(BaseModel):
     quantity: int = Field(gt=0)
     product_id: int
 
-date_time_dict = zip(['day', 'month', 'year'], dt.today().strftime('%d-%m-%Y').split('-'))
-class StockRegister(BaseModel):
+class Stock(BaseModel):
     id: int | None = None
     product: str
     type: Literal['INPUT', 'OUTPUT']
     quantity: int = Field(gt=0)
-    date: dict = {time: int(value) for time, value  in date_time_dict}
+    timestamp: float | dt = dt.timestamp(dt.utcnow())
+
+    @staticmethod
+    def get_timestamp(date_in: dt):
+        return date_in.timestamp()
 
 class StockFilter(BaseModel):
     product: str | None = None
+    min_date: dt | None = None
+    max_date: dt | None = None
     type: Literal['INPUT', 'OUTPUT'] | None = None

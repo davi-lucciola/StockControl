@@ -1,7 +1,7 @@
 from http import HTTPStatus
 from fastapi import APIRouter, HTTPException, Depends 
-from app.models import Product, ProductBase, ProductFilter
-from app.repositories import ProductRepository
+from api.models import Product, ProductBase, ProductFilter
+from api.repositories import ProductRepository
 
 
 router = APIRouter(prefix='/product', tags=['Produtos'])
@@ -30,6 +30,7 @@ async def search(
 async def create(product: ProductBase, product_repository: ProductRepository = Depends(ProductRepository)):
     '''
     Endpoint para criar novos produtos.
+
     params
         name: str
         price: float
@@ -44,6 +45,7 @@ async def create(product: ProductBase, product_repository: ProductRepository = D
 async def update(id: int, product: ProductBase, product_repository: ProductRepository = Depends(ProductRepository)):
     '''
     Endpoint para alterar produtos existentes dado o seu identificador.
+
     params
         id: int (path)
         name: str
@@ -60,6 +62,7 @@ async def update(id: int, product: ProductBase, product_repository: ProductRepos
 async def delete(id: int, product_repository: ProductRepository = Depends(ProductRepository)):
     '''
     Endpoint para remover produtos existentes dado o seu identificador.
+    
     params:
         id: int (path)
     '''

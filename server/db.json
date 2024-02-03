@@ -1,0 +1,47 @@
+{
+    "product": {
+        "1": {
+            "name": "Vinho branco",
+            "price": 1.0,
+            "amount": 11
+        },
+        "2": {
+            "name": "123456",
+            "price": 1203332.3232
+        },
+        "3": {
+            "name": "Coxinha",
+            "price": 3.0
+        },
+        "4": {
+            "name": "Empada",
+            "price": 3.0
+        }
+    },
+    "stock": {
+        "1": {
+            "product": "Vinho branco",
+            "type": "INPUT",
+            "quantity": 12,
+            "timestamp": 1706956079.139316
+        },
+        "2": {
+            "product": "Vinho branco",
+            "type": "OUTPUT",
+            "quantity": 1,
+            "timestamp": 1706956608.216667
+        },
+        "3": {
+            "product": "Vinho branco",
+            "type": "INPUT",
+            "quantity": 1,
+            "timestamp": 1706956608.216667
+        },
+        "4": {
+            "product": "Vinho branco",
+            "type": "OUTPUT",
+            "quantity": 1,
+            "timestamp": 1706956608.216667
+        }
+    }
+}

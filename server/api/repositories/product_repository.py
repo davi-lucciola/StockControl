@@ -2,8 +2,8 @@ from tinydb import Query
 from fastapi import Depends
 from functools import reduce
 from dataclasses import dataclass
-from app.database import db, Table
-from app.models import Product, ProductBase, ProductFilter
+from api.db import db, Table
+from api.models import Product, ProductBase, ProductFilter
 
 
 @dataclass

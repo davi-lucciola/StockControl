@@ -1,8 +1,7 @@
 from http import HTTPStatus
-from typing import Literal
 from fastapi import APIRouter, HTTPException, Depends 
-from app.models import StockBase, StockRegister, StockFilter
-from app.repositories import ProductRepository, StockRepository
+from api.models import Stock, StockRegister, StockFilter
+from api.repositories import ProductRepository, StockRepository
 
 
 router = APIRouter(prefix='/stock', tags=['Controle de Estoque'])
@@ -12,7 +11,7 @@ router = APIRouter(prefix='/stock', tags=['Controle de Estoque'])
 def search(
     filter: StockFilter = Depends(),
     stock_repository: StockRepository = Depends(StockRepository)
-) -> list[StockRegister]:
+) -> list[Stock]:
     '''
     '''
     stocks = stock_repository.find_all(filter)
@@ -24,7 +23,7 @@ def search(
 
 @router.post('/in')
 def input(
-    stock_register: StockBase, 
+    stock_register: StockRegister, 
     stock_repository: StockRepository = Depends(StockRepository),
     product_repository: ProductRepository = Depends(ProductRepository),
 ) -> dict:
@@ -36,18 +35,18 @@ def input(
     product.amount += stock_register.quantity
     product_repository.update(product)
 
-    stock_register = StockRegister(
+    stock = Stock(
         product=product.name, 
         type='INPUT',
         **stock_register.model_dump(exclude='product_id')
     )
-    stock_repository.save_register(stock_register)
+    stock_repository.save_register(stock)
 
     return {'detail': 'Produtos adicionados ao estoque com sucesso.'}
 
 @router.delete('/out')
 def output(
-    stock_register: StockBase, 
+    stock_register: StockRegister, 
     stock_repository: StockRepository = Depends(StockRepository),
     product_repository: ProductRepository = Depends(ProductRepository),
 ) -> dict:
@@ -62,11 +61,11 @@ def output(
     product.amount -= stock_register.quantity
     product_repository.update(product)
 
-    stock_register = StockRegister(
+    stock = Stock(
         product=product.name, 
         type='OUTPUT',
         **stock_register.model_dump(exclude='product_id')
     )
-    stock_repository.save_register(stock_register)
+    stock_repository.save_register(stock)
 
     return {'detail': 'Produtos retirados do estoque com sucesso.'}

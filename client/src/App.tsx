@@ -64,7 +64,6 @@ export function App() {
       name: "",
       price: 0.0,
     });
-    console.log(productFormData);
   };
 
   return (

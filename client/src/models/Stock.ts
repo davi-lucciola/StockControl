@@ -5,3 +5,8 @@ export type Stock = {
   quantity: number;
   timestamp: number;
 };
+
+export type StockPaylod = {
+  quantity: number;
+  product_id: number;
+};

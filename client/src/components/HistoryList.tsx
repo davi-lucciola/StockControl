@@ -1,22 +1,25 @@
 import { useEffect, useState } from "react";
-import { Stock } from "../models/Stock";
-import { api } from "../Api";
+import { useStock } from "../hooks/useStock";
 
 export function HistoryList() {
-  const [stock, setStock] = useState<Stock[]>([]);
+  const [sideBarOpen, setSideBarOpen] = useState(true);
+  const { stock, setStock, fetchStocks } = useStock();
 
-  const fetchStock = async () => {
-    const { data: stockData } = await api.get<Stock[]>("/stock/history");
-    setStock(stockData);
+  const loadStock = async () => {
+    const stocks = await fetchStocks();
+    setStock(stocks);
   };
 
   useEffect(() => {
-    fetchStock();
+    loadStock();
   }, []);
 
   return (
-    <>
-      <aside className="bg-dark text-white p-4">
+    <div className="vh-100 d-flex flex-row align-items-center">
+      <aside
+        className="h-100 collapse show collapse-horizontal bg-dark text-white p-4"
+        id="sidebar"
+      >
         <h1> Movimentações </h1>
         <ul className="mt-5 d-flex flex-column gap-4">
           {stock.map((stock) => {
@@ -45,6 +48,16 @@ export function HistoryList() {
           })}
         </ul>
       </aside>
-    </>
+      <button
+        className="h-100 btn btn-dark rounded-0 text-uppercase fs-4"
+        data-bs-toggle="collapse"
+        data-bs-target="#sidebar"
+        aria-controls="sidebar"
+        aria-expanded={sideBarOpen}
+        onClick={() => setSideBarOpen(!sideBarOpen)}
+      >
+        {sideBarOpen ? "<" : ">"}
+      </button>
+    </div>
   );
 }

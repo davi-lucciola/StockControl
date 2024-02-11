@@ -24,7 +24,7 @@ export function ProductsFilter() {
   };
 
   return (
-    <section className="collapse w-100 px-4" id="product-filter">
+    <section className="container collapse w-100" id="product-filter">
       <form className="d-flex flex-row align-items-center justify-content-around gap-5">
         <div className="w-100 d-flex flex-column">
           <label htmlFor="name" className="form-label">

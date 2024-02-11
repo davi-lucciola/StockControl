@@ -1,4 +1,4 @@
-import { Response } from "../../api/api";
+import { Response } from "../../api/http";
 import { Product, ProductFilter, ProductPayload } from "../models/Product";
 
 export interface IProductService {

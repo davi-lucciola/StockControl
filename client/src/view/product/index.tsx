@@ -4,7 +4,7 @@ import { ProductsTable } from "./ProductsTable";
 import { useProduct } from "../../controller/hooks/useProduct";
 import { FunnelSimple, Package } from "@phosphor-icons/react";
 import { ModalOpenButton } from "../components/Modal/ModalOpenButton";
-import { MODAL_TYPES } from "../components/Modal";
+import { MODAL_TYPES } from "../components/Modal/types";
 import { ProductsFilter } from "./ProductsFilter";
 import { ProductPayload } from "../../domain/models/Product";
 
@@ -21,10 +21,10 @@ export function ProductsList() {
   return (
     <>
       <div className="container-fluid w-100 d-flex flex-column p-0">
-        <header className="container-fluid d-flex flex-column align-items-center bg-light p-5 gap-3">
+        <header className="container-fluid d-flex flex-column align-items-center bg-light p-5 gap-4">
           <section
             id="product-actions"
-            className="w-100 d-flex align-center justify-content-between px-4"
+            className="container w-100 d-flex align-center justify-content-between"
           >
             <ModalOpenButton
               type="button"

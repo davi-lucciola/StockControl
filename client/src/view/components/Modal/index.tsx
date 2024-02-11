@@ -2,11 +2,6 @@ import { ReactNode } from "react";
 import { ModalCloseButton } from "./ModalCloseButton";
 import { BaseProps } from "../BaseProps";
 
-export const MODAL_TYPES = {
-  createProduct: "create-product-form",
-  updateProduct: "update-product-form",
-};
-
 type ModalProps = BaseProps & {
   onClose: () => void;
   title: string;

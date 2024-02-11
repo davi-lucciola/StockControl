@@ -1,5 +1,5 @@
-import { Response, api } from "../../api/api";
-import { httpStatus } from "../../api/http";
+import { api } from "../../api/api";
+import { Response, HTTP_STATUS } from "../../api/http";
 import { IProductService } from "../interfaces/IProduct";
 import { Product, ProductFilter, ProductPayload } from "../models/Product";
 
@@ -8,7 +8,7 @@ export class ProductService implements IProductService {
     const { data: productData, status } = await api.get<Product[]>("/product", {
       params: filter,
     });
-    return status != httpStatus.NO_CONTENT ? productData : [];
+    return status != HTTP_STATUS.NO_CONTENT ? productData : [];
   }
 
   async createProduct(productPayload: ProductPayload): Promise<Response> {

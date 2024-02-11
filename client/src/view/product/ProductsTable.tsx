@@ -1,6 +1,6 @@
 import { Product, ProductPayload } from "../../domain/models/Product";
 import { ModalOpenButton } from "../components/Modal/ModalOpenButton";
-import { MODAL_TYPES } from "../components/Modal";
+import { MODAL_TYPES } from "../components/Modal/types";
 
 type ProductsTableData = {
   products: Product[];

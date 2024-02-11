@@ -1,18 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useStock } from "../../controller/hooks/useStock";
 
-export function HistoryList() {
+export function StockList() {
   const [sideBarOpen, setSideBarOpen] = useState(true);
-  const { stock, setStock, fetchStocks } = useStock();
-
-  const loadStock = async () => {
-    const stocks = await fetchStocks();
-    setStock(stocks);
-  };
-
-  useEffect(() => {
-    loadStock();
-  }, []);
+  const { stocks } = useStock();
 
   return (
     <div className="vh-100 d-flex flex-row align-items-center">
@@ -21,8 +12,9 @@ export function HistoryList() {
         id="sidebar"
       >
         <h1 className="fs-3"> Movimentações </h1>
+        <hr />
         <ul className="mt-5 d-flex flex-column gap-4" data-bs-spy="scroll">
-          {stock.map((stock) => {
+          {stocks.map((stock) => {
             return (
               <li
                 key={stock.id}

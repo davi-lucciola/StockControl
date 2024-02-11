@@ -19,12 +19,12 @@ export type IProductContextData = {
   setProductPayload: (productPayload: ProductPayload) => void;
 };
 
-export const ProductContext = createContext({} as IProductContextData);
-
 type ProductContextProviderProps = {
   children: ReactNode;
   productService: IProductService;
 };
+
+export const ProductContext = createContext({} as IProductContextData);
 
 export function ProductContextProvider({
   children,

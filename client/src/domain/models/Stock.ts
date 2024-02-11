@@ -7,6 +7,6 @@ export type Stock = {
 };
 
 export type StockPaylod = {
-  quantity: number;
-  product_id: number;
+  quantity?: number;
+  productId?: number;
 };

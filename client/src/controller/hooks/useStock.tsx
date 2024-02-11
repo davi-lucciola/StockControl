@@ -1,36 +1,22 @@
-import { useState } from "react";
-import { Stock, StockPaylod } from "../../domain/models/Stock";
-import { api } from "../../api/api";
+import { useContext } from "react";
+import { StockContext } from "../contexts/StockContext";
 
 export function useStock() {
-  const [stock, setStock] = useState<Stock[]>([]);
-
-  const fetchStocks = async (): Promise<Stock[]> => {
-    const { data: stockData } = await api.get<Stock[]>("/stock/history");
-    return stockData;
-  };
-
-  const registerStockIn = async (
-    stockRegister: StockPaylod,
-  ): Promise<Response> => {
-    const { data } = await api.post<Response>("/stock/in", stockRegister);
-    return data;
-  };
-
-  const registerStockOut = async (
-    stockRegister: StockPaylod,
-  ): Promise<Response> => {
-    const { data } = await api.delete<Response>("/stock/out", {
-      data: stockRegister,
-    });
-    return data;
-  };
+  const {
+    stocks,
+    getStocks,
+    addStock,
+    removeStock,
+    stockPayload,
+    setStockPayload,
+  } = useContext(StockContext);
 
   return {
-    stock,
-    setStock,
-    fetchStocks,
-    registerStockIn,
-    registerStockOut,
+    stocks,
+    getStocks,
+    addStock,
+    removeStock,
+    stockPayload,
+    setStockPayload,
   };
 }

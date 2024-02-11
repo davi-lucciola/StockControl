@@ -1,6 +1,6 @@
 # Stock Control
 
-Project with TinyDB for controlling stock of products.
+Project with PostgresSQL for controlling stock of products.
 
 ## Endpoints
 

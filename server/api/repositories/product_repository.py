@@ -1,48 +1,78 @@
-from tinydb import Query
-from fastapi import Depends
+from http import HTTPStatus
+from itertools import product
+from sqlmodel import Session, col, select
+from fastapi import Depends, HTTPException
 from functools import reduce
 from dataclasses import dataclass
-from api.db import db, Table
+from api.db import get_db
 from api.models import Product, ProductBase, ProductFilter
 
 
 @dataclass
 class ProductRepository:
-    product_table: Table = Depends(lambda: db.table('product'))
+    db: Session = Depends(get_db)
     
     def find_all(self, filter: ProductFilter) -> list[Product]:
-        queries = []
-        ProductQuery = Query()
-
+        stmt = select(Product)
+        
         if filter.name is not None:
-            queries.append(ProductQuery.name.search(filter.name))
+            stmt = stmt.where(col(Product.name).contains(filter.name))
 
         if filter.min_price is not None:
-            queries.append(ProductQuery.price >= filter.min_price)
+            stmt = stmt.where(Product.price >= filter.min_price)
 
         if filter.max_price is not None:
-            queries.append(ProductQuery.price <= filter.max_price)
+            stmt = stmt.where(Product.price <= filter.max_price)
         
-        products = self.product_table.search(reduce(lambda query1, query2: query1 & query2, queries)) \
-            if len(queries) > 0 else self.product_table.all()
-        
-        return [Product(id=product.doc_id, **product) for product in products]
+        products = self.db.exec(stmt).all()
+        return products
     
     def find_by_id(self, id: int) -> Product | None:
-        product = self.product_table.get(doc_id=id)
-        return Product(id=product.doc_id, **product) if product is not None else None
+        stmt = select(Product).where(Product.id == id)
+        product = self.db.exec(stmt).one_or_none()
+        return product
     
     def find_by_name(self, name: str) -> Product | None:
-        ProductQuery = Query()
-        product = self.product_table.get(ProductQuery.name == name)
-        return Product(id=product.doc_id, **product) if product is not None else None
+        stmt = select(Product).where(Product.name == name)
+        product = self.db.exec(stmt).one_or_none()
+        return product
 
     def create(self, product: ProductBase) -> int:
         product.name = product.name.capitalize()
-        return self.product_table.insert(product.model_dump())
+        product: Product = Product(**product.model_dump())
+        
+        try:
+            self.db.add(product)
+            self.db.commit()
+            return product.id
+        except:
+            raise HTTPException(
+                detail='Não foi possivel cadastrar o produto.', 
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
     
     def update(self, product: Product) -> int:
-        return self.product_table.update(product.model_dump(exclude='id'), doc_ids=[product.id])[0]
-    
+        product_in_db: Product = self.find_by_id(product.id)
+        product_in_db.name = product.name
+        product_in_db.price = product.price
+        product_in_db.amount = product.amount
+
+        try:
+            self.db.commit()
+            return product_in_db.id
+        except:
+            raise HTTPException(
+                detail='Não foi possivel editar o produto.', 
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
+            
     def delete(self, id: int) -> None:
-        self.product_table.remove(doc_ids=[id])
+        product = self.find_by_id(id)
+        self.db.delete(product)
+        try:
+            self.db.commit()
+        except:
+            raise HTTPException(
+                detail='Não foi possivel excluir o produto.', 
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR
+            )

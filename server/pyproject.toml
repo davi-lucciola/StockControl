@@ -8,8 +8,11 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.104.1"
-tinydb = "^4.8.0"
 uvicorn = "^0.23.2"
+sqlmodel = "^0.0.14"
+psycopg2-binary = "^2.9.9"
+python-decouple = "^3.8"
+alembic = "^1.13.1"
 
 
 [build-system]

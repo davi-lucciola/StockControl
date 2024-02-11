@@ -14,10 +14,6 @@ async def search(
 ) -> list[Product]:
     '''
     Endpoint para pesquisar produtos dado um filtro.
-    filters
-        name: str
-        min_value: float
-        max_value: float
     '''
     products: list[dict] = product_repository.find_all(filter)
 
@@ -30,10 +26,6 @@ async def search(
 async def create(product: ProductBase, product_repository: ProductRepository = Depends(ProductRepository)):
     '''
     Endpoint para criar novos produtos.
-
-    params
-        name: str
-        price: float
     '''
     if product_repository.find_by_name(product.name.capitalize()) is not None:
         raise HTTPException(detail='Esse produto já está cadastrado.', status_code=HTTPStatus.BAD_REQUEST)
@@ -45,11 +37,6 @@ async def create(product: ProductBase, product_repository: ProductRepository = D
 async def update(id: int, product: ProductBase, product_repository: ProductRepository = Depends(ProductRepository)):
     '''
     Endpoint para alterar produtos existentes dado o seu identificador.
-
-    params
-        id: int (path)
-        name: str
-        price: float
     '''
     if product_repository.find_by_id(id) is None:
         raise HTTPException(detail='Produto não encontrado', status_code=HTTPStatus.NOT_FOUND)
@@ -62,12 +49,9 @@ async def update(id: int, product: ProductBase, product_repository: ProductRepos
 async def delete(id: int, product_repository: ProductRepository = Depends(ProductRepository)):
     '''
     Endpoint para remover produtos existentes dado o seu identificador.
-    
-    params:
-        id: int (path)
     '''
     if product_repository.find_by_id(id) is None:
         raise HTTPException(detail='Produto não encontrado', status_code=HTTPStatus.NOT_FOUND)
     
     product_repository.delete(id)
-    return {'detail': 'Produto removido com sucesso.'}
+    return {'detail': 'Produto excluido com sucesso.'}

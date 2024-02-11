@@ -1,43 +1,42 @@
-from tinydb import Query
-from fastapi import Depends
-from functools import reduce
+from http import HTTPStatus
+from fastapi import Depends, HTTPException
 from dataclasses import dataclass
-from api.db import db, Table
+from sqlmodel import Session, select
 from api.models import Stock, StockFilter
+from api.db import get_db
 
 
 @dataclass
 class StockRepository:
-    stock_table: Table = Depends(lambda: db.table('stock'))
+    db: Session = Depends(get_db)
 
     def find_all(self, filter: StockFilter):
-        queries = []
-        StockQuery = Query()
+        stmt = select(Stock)
     
-        if filter.product is not None:
-            queries.append(StockQuery.product.search(filter.product))
+        if filter.product_id is not None:
+            stmt = stmt.where(Stock.product_id == filter.product_id)
 
         if filter.type is not None:
-            queries.append(StockQuery.type == filter.type)
+            stmt = stmt.where(Stock.type == filter.type)
 
         if filter.min_date is not None:
-            queries.append(StockQuery.timestamp >= Stock.get_timestamp(filter.min_date))
-
+            stmt = stmt.where(Stock.timestamp >= Stock.get_timestamp(filter.min_date))
+            
         if filter.max_date is not None:
-            queries.append(StockQuery.timestamp <= Stock.get_timestamp(filter.max_date))
-        
-        stocks: dict = self.stock_table.search(reduce(lambda query1, query2: query1 & query2, queries)) \
-            if len(queries) > 0 else self.stock_table.all()
-        
-        stocks: list[Stock] = [
-            Stock(
-                id=stock.doc_id, 
-                **stock
-            ) 
-            for stock in stocks
-        ]
+            stmt = stmt.where(Stock.timestamp <= Stock.get_timestamp(filter.min_date))
+
+        stocks = self.db.exec(stmt).all()
 
         return stocks
 
     def save_register(self, stock: Stock) -> int:
-        return self.stock_table.insert(stock.model_dump(exclude='id'))
+        try:
+            self.db.add(stock)
+            self.db.commit()
+            return stock.id
+        except:
+            raise HTTPException(
+                detail='Não foi possivel adicionar movimentação de estoque', 
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
+            

@@ -14,3 +14,7 @@ services:
       context: ./client
     ports:
       - "5173:5173"
+    environment:
+      - POSTGRES_DB=stock_control
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin

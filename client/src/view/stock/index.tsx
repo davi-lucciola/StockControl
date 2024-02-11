@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useStock } from "../hooks/useStock";
+import { useStock } from "../../controller/hooks/useStock";
 
 export function HistoryList() {
   const [sideBarOpen, setSideBarOpen] = useState(true);
@@ -17,32 +17,41 @@ export function HistoryList() {
   return (
     <div className="vh-100 d-flex flex-row align-items-center">
       <aside
-        className="h-100 collapse show collapse-horizontal bg-dark text-white p-4"
+        className={`h-100 collapse show collapse-horizontal bg-dark text-white p-4`}
         id="sidebar"
       >
-        <h1> Movimentações </h1>
-        <ul className="mt-5 d-flex flex-column gap-4">
+        <h1 className="fs-3"> Movimentações </h1>
+        <ul className="mt-5 d-flex flex-column gap-4" data-bs-spy="scroll">
           {stock.map((stock) => {
             return (
               <li
                 key={stock.id}
-                className={`d-flex justify-content-between p-3 rounded ${
-                  stock.type == "INPUT" ? "bg-success" : "bg-danger"
+                className={`d-flex card rounded ${
+                  stock.type == "INPUT"
+                    ? "bg-white text-dark"
+                    : "bg-secondary text-white"
                 }`}
               >
-                <div className="d-flex fs-5 flex-column justify-content-center w-25">
+                <div className="card-body d-flex flex-column justify-content-center">
                   <p> {stock.product} </p>
-                  <p>
+                  <p className="d-flex gap-4 justify-content-between fw-bold">
                     {new Date(stock.timestamp * 1000).toLocaleString("pt-BR", {
                       year: "numeric",
                       month: "numeric",
                       day: "numeric",
                     })}
+                    <span
+                      className={`border-bottom border-4 ${
+                        stock.type == "INPUT"
+                          ? "text-success border-success"
+                          : "text-danger border-danger"
+                      }`}
+                    >
+                      {stock.type == "INPUT" ? "+" : "-"}
+                      {stock.quantity.toPrecision(2)}
+                    </span>
                   </p>
                 </div>
-                <p className="w-25 d-flex justify-content-center align-items-center fs-3">
-                  {stock.type == "INPUT" ? "+" : "-"} {stock.quantity}
-                </p>
               </li>
             );
           })}

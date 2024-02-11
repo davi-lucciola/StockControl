@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Stock, StockPaylod } from "../models/Stock";
-import { api } from "../api";
+import { Stock, StockPaylod } from "../../domain/models/Stock";
+import { api } from "../../api/api";
 
 export function useStock() {
   const [stock, setStock] = useState<Stock[]>([]);

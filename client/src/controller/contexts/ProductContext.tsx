@@ -1,6 +1,23 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { IProductContextData, IProductService } from "../interfaces/IProduct";
-import { Product, ProductPayload } from "../models/Product";
+import {
+  Product,
+  ProductFilter,
+  ProductPayload,
+} from "../../domain/models/Product";
+import { IProductService } from "../../domain/interfaces/IProduct";
+
+export type IProductContextData = {
+  products: Product[];
+  getProducts: (filter: ProductFilter) => Promise<void>;
+  createProduct: (productPayload: ProductPayload) => Promise<void>;
+  updateProduct: (
+    productId: number,
+    productPayload: ProductPayload,
+  ) => Promise<void>;
+  deleteProduct: (productId: number) => Promise<void>;
+  productPayload: ProductPayload;
+  setProductPayload: (productPayload: ProductPayload) => void;
+};
 
 export const ProductContext = createContext({} as IProductContextData);
 
@@ -14,12 +31,18 @@ export function ProductContextProvider({
   productService,
 }: ProductContextProviderProps) {
   const [products, setProducts] = useState<Product[]>([]);
+  const [productPayload, setProductPayload] = useState<ProductPayload>({
+    name: "",
+    price: 0.0,
+  });
 
   const loadProducts = async (productsData: Product[]) => {
-    if (productsData.length == 0) {
-      productsData = await productService.fetchProducts();
-    }
     setProducts(productsData);
+  };
+
+  const getProducts = async (filter: ProductFilter) => {
+    const products = await productService.fetchProducts(filter);
+    loadProducts(products);
   };
 
   const createProduct = async (productPayload: ProductPayload) => {
@@ -35,14 +58,19 @@ export function ProductContextProvider({
     productId: number,
     productPayload: ProductPayload,
   ) => {
-    const { createdId } = await productService.updateProduct(
-      productId,
-      productPayload,
-    );
+    await productService.updateProduct(productId, productPayload);
+
+    const productUpdated = {
+      ...products.find((product) => product.id == productId),
+      name: productPayload.name,
+      price: productPayload.price,
+    } as Product;
+
     const productsData = [
-      { id: createdId, amount: 0, ...productPayload } as Product,
-      ...products,
+      productUpdated,
+      ...products.filter((product) => product.id != productId),
     ];
+
     loadProducts(productsData);
   };
 
@@ -53,17 +81,19 @@ export function ProductContextProvider({
   };
 
   useEffect(() => {
-    loadProducts(products);
+    getProducts({} as ProductFilter);
   }, []);
 
   return (
     <ProductContext.Provider
       value={{
         products,
-        loadProducts,
+        getProducts,
         createProduct,
         updateProduct,
         deleteProduct,
+        productPayload,
+        setProductPayload,
       }}
     >
       {children}

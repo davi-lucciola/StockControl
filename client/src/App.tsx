@@ -1,7 +1,7 @@
-import { HistoryList } from "./components/HistoryList";
-import { ProductsList } from "./components/ProductsList";
-import { ProductContextProvider } from "./contexts/ProductContext";
-import { ProductService } from "./services/ProductService";
+import { HistoryList } from "./view/stock";
+import { ProductsList } from "./view/product";
+import { ProductContextProvider } from "./controller/contexts/ProductContext";
+import { ProductService } from "./domain/services/ProductService";
 
 export function App() {
   return (

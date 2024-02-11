@@ -1,11 +1,14 @@
-import { Response, api } from "../api";
+import { Response, api } from "../../api/api";
+import { httpStatus } from "../../api/http";
 import { IProductService } from "../interfaces/IProduct";
-import { Product, ProductPayload } from "../models/Product";
+import { Product, ProductFilter, ProductPayload } from "../models/Product";
 
 export class ProductService implements IProductService {
-  async fetchProducts(): Promise<Product[]> {
-    const { data: productData } = await api.get<Product[]>("/product");
-    return productData;
+  async fetchProducts(filter: ProductFilter): Promise<Product[]> {
+    const { data: productData, status } = await api.get<Product[]>("/product", {
+      params: filter,
+    });
+    return status != httpStatus.NO_CONTENT ? productData : [];
   }
 
   async createProduct(productPayload: ProductPayload): Promise<Response> {

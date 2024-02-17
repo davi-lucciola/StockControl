@@ -1,10 +1,10 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { Stock, StockPaylod } from "../../domain/models/Stock";
+import { Stock, StockFilter, StockPaylod } from "../../domain/models/Stock";
 import { IStockService } from "../../domain/interfaces/IStock";
 
 export type StockContextData = {
   stocks: Stock[];
-  getStocks: () => Promise<void>;
+  getStocks: (stockFilter: StockFilter) => Promise<void>;
   addStock(stockPayload: StockPaylod): Promise<void>;
   removeStock(stockPayload: StockPaylod): Promise<void>;
   stockPayload: StockPaylod;
@@ -32,8 +32,8 @@ export function StockContextProvider({
     setStocks(stockData);
   };
 
-  const getStocks = async () => {
-    const stocksData = await stockService.fetchStocks();
+  const getStocks = async (stockFilter: StockFilter) => {
+    const stocksData = await stockService.fetchStocks(stockFilter);
     loadStocks(stocksData);
   };
 
@@ -46,7 +46,7 @@ export function StockContextProvider({
   };
 
   useEffect(() => {
-    getStocks();
+    getStocks({} as StockFilter);
   }, []);
 
   return (

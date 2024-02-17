@@ -1,5 +1,7 @@
 import { ChangeEvent, FormEvent, useContext } from "react";
 import { ProductContext } from "../contexts/ProductContext";
+import { HttpError, HttpWarning } from "../../domain/errors/HttpError";
+import { toast } from "react-toastify";
 
 export function useProduct() {
   const {
@@ -22,7 +24,19 @@ export function useProduct() {
 
   const handleCreateProduct = async (event: FormEvent) => {
     event.preventDefault();
-    await createProduct(productPayload);
+    try {
+      const detail = await createProduct(productPayload);
+      console.log(detail);
+      toast.success(detail);
+    } catch (error) {
+      if (error instanceof HttpWarning) {
+        toast.warn(error.message);
+      } else if (error instanceof HttpError) {
+        toast.error(error.message);
+      } else {
+        toast.error("Houve um erro ao realizar sua solicitação.");
+      }
+    }
     setProductPayload({
       name: "",
       price: 0.0,
@@ -31,11 +45,40 @@ export function useProduct() {
 
   const handleUpdateProduct = async (event: FormEvent) => {
     event.preventDefault();
-    await updateProduct(productPayload.productId!, productPayload);
+    try {
+      const detail = await updateProduct(
+        productPayload.productId!,
+        productPayload,
+      );
+      toast.success(detail);
+    } catch (error) {
+      if (error instanceof HttpWarning) {
+        toast.warn(error.message);
+      } else if (error instanceof HttpError) {
+        toast.error(error.message);
+      } else {
+        toast.error("Houve um erro ao realizar sua solicitação.");
+      }
+    }
     setProductPayload({
       name: "",
       price: 0.0,
     });
+  };
+
+  const handleDeleteProduct = async (productId: number) => {
+    try {
+      const detail = await deleteProduct(productId);
+      toast.success(detail);
+    } catch (error) {
+      if (error instanceof HttpWarning) {
+        toast.warn(error.message);
+      } else if (error instanceof HttpError) {
+        toast.error(error.message);
+      } else {
+        toast.error("Houve um erro ao realizar sua solicitação.");
+      }
+    }
   };
 
   return {
@@ -47,6 +90,7 @@ export function useProduct() {
     handleInputChange,
     handleCreateProduct,
     handleUpdateProduct,
+    handleDeleteProduct,
     productPayload,
     setProductPayload,
   };

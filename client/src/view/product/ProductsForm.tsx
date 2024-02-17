@@ -20,7 +20,7 @@ export function ProductsForm({
     setProductPayload,
   } = useProduct();
 
-  const onCloseForm = () =>
+  const onCloseProductForm = () =>
     setTimeout(
       () =>
         setProductPayload({
@@ -36,7 +36,7 @@ export function ProductsForm({
       id={id}
       title={!productPayload.productId ? "Cadastrar Produto" : "Editar Produto"}
       className={className}
-      onClose={onCloseForm}
+      onClose={onCloseProductForm}
     >
       <form
         onSubmit={
@@ -76,7 +76,7 @@ export function ProductsForm({
         </div>
         <div className="modal-footer">
           <ModalCloseButton
-            onClick={onCloseForm}
+            onClick={onCloseProductForm}
             type="submit"
             className="btn btn-primary"
           >

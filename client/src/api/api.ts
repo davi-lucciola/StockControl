@@ -3,6 +3,9 @@ import applyCaseMiddleware from "axios-case-converter";
 
 export const api = applyCaseMiddleware(
   axios.create({
-    baseURL: "https://stock-control-api-p80x.onrender.com",
+    baseURL: import.meta.env.VITE_BASE_URL,
+    validateStatus: (status: number) => {
+      return status < 400;
+    },
   }),
 );

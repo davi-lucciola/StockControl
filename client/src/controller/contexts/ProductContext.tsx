@@ -9,12 +9,12 @@ import { IProductService } from "../../domain/interfaces/IProduct";
 export type IProductContextData = {
   products: Product[];
   getProducts: (filter: ProductFilter) => Promise<void>;
-  createProduct: (productPayload: ProductPayload) => Promise<void>;
+  createProduct: (productPayload: ProductPayload) => Promise<string>;
   updateProduct: (
     productId: number,
     productPayload: ProductPayload,
-  ) => Promise<void>;
-  deleteProduct: (productId: number) => Promise<void>;
+  ) => Promise<string>;
+  deleteProduct: (productId: number) => Promise<string>;
   productPayload: ProductPayload;
   setProductPayload: (productPayload: ProductPayload) => void;
 };
@@ -46,19 +46,24 @@ export function ProductContextProvider({
   };
 
   const createProduct = async (productPayload: ProductPayload) => {
-    const { createdId } = await productService.createProduct(productPayload);
+    const { detail, createdId } =
+      await productService.createProduct(productPayload);
     const productsData = [
       { id: createdId, amount: 0, ...productPayload } as Product,
       ...products,
     ];
     loadProducts(productsData);
+    return detail;
   };
 
   const updateProduct = async (
     productId: number,
     productPayload: ProductPayload,
   ) => {
-    await productService.updateProduct(productId, productPayload);
+    const { detail } = await productService.updateProduct(
+      productId,
+      productPayload,
+    );
 
     const productUpdated = {
       ...products.find((product) => product.id == productId),
@@ -72,12 +77,14 @@ export function ProductContextProvider({
     ];
 
     loadProducts(productsData);
+    return detail;
   };
 
   const deleteProduct = async (productId: number) => {
-    await productService.deleteProduct(productId);
+    const { detail } = await productService.deleteProduct(productId);
     const productsData = products.filter((product) => product.id != productId);
     loadProducts(productsData);
+    return detail;
   };
 
   useEffect(() => {

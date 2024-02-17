@@ -1,11 +1,13 @@
 import { api } from "../../api/api";
 import { Response } from "../../api/http";
 import { IStockService } from "../interfaces/IStock";
-import { Stock, StockPaylod } from "../models/Stock";
+import { Stock, StockFilter, StockPaylod } from "../models/Stock";
 
 export class StockService implements IStockService {
-  async fetchStocks(): Promise<Stock[]> {
-    const { data: stockData } = await api.get<Stock[]>("/stock/history");
+  async fetchStocks(stockFilter: StockFilter): Promise<Stock[]> {
+    const { data: stockData } = await api.get<Stock[]>("/stock/history", {
+      params: stockFilter,
+    });
     return stockData;
   }
 

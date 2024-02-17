@@ -5,14 +5,15 @@ import { MODAL_TYPES } from "../components/Modal/types";
 type ProductsTableData = {
   products: Product[];
   onEdit: (productPayload: ProductPayload) => void;
-  onDetailStock?: (productId: number) => void;
   onDelete: (productId: number) => Promise<void>;
+  onDetailStock: (productId: number) => void;
 };
 
 export function ProductsTable({
   products,
-  onDelete,
   onEdit,
+  onDelete,
+  onDetailStock,
 }: ProductsTableData) {
   return (
     <table className="container table table-striped table-bordered table-hover">
@@ -34,7 +35,14 @@ export function ProductsTable({
               <td>{product.price}</td>
               <td>{product.amount}</td>
               <td className="d-flex justify-content-around gap-4">
-                <button className="btn btn-secondary">Movimentações </button>
+                <ModalOpenButton
+                  type="button"
+                  targetId={MODAL_TYPES.detailProductStock}
+                  className="btn btn-secondary"
+                  onClick={() => onDetailStock(product.id)}
+                >
+                  Movimentações
+                </ModalOpenButton>
                 <ModalOpenButton
                   type="button"
                   targetId={MODAL_TYPES.updateProduct}

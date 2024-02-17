@@ -7,15 +7,23 @@ import { ModalOpenButton } from "../components/Modal/ModalOpenButton";
 import { MODAL_TYPES } from "../components/Modal/types";
 import { ProductsFilter } from "./ProductsFilter";
 import { ProductPayload } from "../../domain/models/Product";
+import { useStock } from "../../controller/hooks/useStock";
 
 export function ProductsList() {
-  const { products, deleteProduct, productPayload, setProductPayload } =
+  const { products, handleDeleteProduct, productPayload, setProductPayload } =
     useProduct();
+  const { stockPayload, setStockPayload } = useStock();
   const [filterIsOpen, setFilterIsOpen] = useState<boolean>(false);
 
   const handleOpenUpdateModal = (productPayload: ProductPayload) => {
-    console.log(productPayload);
     setProductPayload(productPayload);
+  };
+
+  const handleOpenDetailStockModal = (productId: number) => {
+    setStockPayload({
+      ...stockPayload,
+      productId: productId,
+    });
   };
 
   return (
@@ -51,7 +59,8 @@ export function ProductsList() {
           <ProductsTable
             products={products}
             onEdit={handleOpenUpdateModal}
-            onDelete={deleteProduct}
+            onDelete={handleDeleteProduct}
+            onDetailStock={handleOpenDetailStockModal}
           />
         </main>
       </div>

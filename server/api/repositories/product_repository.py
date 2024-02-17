@@ -37,14 +37,14 @@ class ProductRepository:
         product = self.db.exec(stmt).one_or_none()
         return product
 
-    def create(self, product: ProductBase) -> int:
+    def create(self, product: ProductBase) -> Product:
         product.name = product.name.capitalize()
         product: Product = Product(**product.model_dump())
         
         try:
             self.db.add(product)
             self.db.commit()
-            return product.id
+            return product
         except:
             raise HTTPException(
                 detail='Não foi possivel cadastrar o produto.', 
@@ -53,9 +53,7 @@ class ProductRepository:
     
     def update(self, product: Product) -> int:
         product_in_db: Product = self.find_by_id(product.id)
-        product_in_db.name = product.name
-        product_in_db.price = product.price
-        product_in_db.amount = product.amount
+        product_in_db.update(product)
 
         try:
             self.db.commit()

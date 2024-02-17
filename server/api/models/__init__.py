@@ -1,2 +1,2 @@
 from .product import Product, ProductBase, ProductFilter
-from .stock import Stock, StockRegister, StockFilter
+from .stock import Stock, StockRegister, StockFilter, StockOut

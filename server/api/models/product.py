@@ -4,10 +4,9 @@ from sqlmodel import Relationship, SQLModel, Field
 if TYPE_CHECKING:
     from api.models import Stock
 
-
 class ProductBase(SQLModel):
     name: str
-    price: float = Field(ge=0)
+    price: float
 
 class Product(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
@@ -16,6 +15,11 @@ class Product(SQLModel, table=True):
     amount: int = 0
 
     stocks: list['Stock'] = Relationship(back_populates='product')
+
+    def update(self, product: 'Product'):
+        self.name = product.name
+        self.price = product.price
+        self.amount = product.amount
 
 class ProductFilter(SQLModel):
     name: str | None = None

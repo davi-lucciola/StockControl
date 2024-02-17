@@ -1,63 +1,31 @@
-from http import HTTPStatus
-from fastapi import APIRouter, HTTPException, Depends 
-from api.models import Product, Stock, StockRegister, StockFilter
-from api.repositories import ProductRepository, StockRepository
+from fastapi import APIRouter, Depends 
+from api.models import StockOut, StockRegister, StockFilter
+from api.services import StockService
 
 
 router = APIRouter(prefix='/stock', tags=['Controle de Estoque'])
 
 
 @router.get('/history')
-def search(
+async def search(
     filter: StockFilter = Depends(),
-    stock_repository: StockRepository = Depends(StockRepository)
-) -> list[Stock]:
-    '''
-    '''
-    stocks = stock_repository.find_all(filter)
-
-    if len(stocks) == 0:
-        raise HTTPException(HTTPStatus.NO_CONTENT)
-
-    return stocks
+    stock_service: StockService = Depends(StockService)
+) -> list[StockOut]:
+    stocks = await stock_service.get_all(filter)
+    return [StockOut(stock) for stock in stocks]
 
 @router.post('/in')
-def input(
+async def input(
     stock_register: StockRegister, 
-    stock_repository: StockRepository = Depends(StockRepository),
-    product_repository: ProductRepository = Depends(ProductRepository),
+    stock_service: StockService = Depends(StockService)
 ) -> dict:
-    product: Product = product_repository.find_by_id(stock_register.product_id)
-
-    if product is None:
-        raise HTTPException(detail='Produto não encontrado.', status_code=HTTPStatus.NOT_FOUND)
-    
-    product.amount += stock_register.quantity
-    product_repository.update(product)
-
-    stock = Stock(type='INPUT', **stock_register.model_dump())
-    stock_repository.save_register(stock)
-
+    await stock_service.add_register(stock_register)
     return {'detail': 'Produtos adicionados ao estoque com sucesso.'}
 
 @router.delete('/out')
-def output(
+async def output(
     stock_register: StockRegister, 
-    stock_repository: StockRepository = Depends(StockRepository),
-    product_repository: ProductRepository = Depends(ProductRepository),
+    stock_service: StockService = Depends(StockService)
 ) -> dict:
-    product: Product = product_repository.find_by_id(stock_register.product_id)
-
-    if product is None:
-        raise HTTPException(detail='Produto não encontrado.', status_code=HTTPStatus.NOT_FOUND)
-    
-    if product.amount - stock_register.quantity < 0:
-        raise HTTPException(detail='Não é possivel retirar mais do que tem no estoque.', status_code=HTTPStatus.BAD_REQUEST)
-
-    product.amount -= stock_register.quantity
-    product_repository.update(product)
-
-    stock = Stock(type='OUTPUT', **stock_register.model_dump())
-    stock_repository.save_register(stock)
-
+    await stock_service.remove_register(stock_register)
     return {'detail': 'Produtos retirados do estoque com sucesso.'}

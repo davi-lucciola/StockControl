@@ -24,7 +24,7 @@ export function StockContextProvider({
   stockService,
 }: StockContextProps) {
   const [stocks, setStocks] = useState<Stock[]>([]);
-  const { products, loadProducts } = useProduct();
+  const { products, loadProducts, deleteProduct } = useProduct();
   const [stockPayload, setStockPayload] = useState<StockPaylod>({
     productId: undefined,
     quantity: undefined,
@@ -76,7 +76,7 @@ export function StockContextProvider({
 
   useEffect(() => {
     getStocks();
-  }, []);
+  }, [deleteProduct]);
 
   return (
     <StockContext.Provider

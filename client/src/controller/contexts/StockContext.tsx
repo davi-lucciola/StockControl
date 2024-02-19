@@ -32,7 +32,7 @@ export function StockContextProvider({
   });
 
   const loadStocks = async (stockData: Stock[]) => {
-    setStocks(stockData.reverse());
+    setStocks(stockData);
   };
 
   const getStocks = async (stockFilter: StockFilter = {}) => {

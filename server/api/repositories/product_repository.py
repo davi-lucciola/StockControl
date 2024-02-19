@@ -14,7 +14,7 @@ class ProductRepository:
         stmt = select(Product)
         
         if filter.name is not None:
-            stmt = stmt.where(col(Product.name).contains(filter.name))
+            stmt = stmt.where(col(Product.name).contains(filter.name.strip().title()))
 
         if filter.min_price is not None:
             stmt = stmt.where(Product.price >= filter.min_price)

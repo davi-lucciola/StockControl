@@ -2,7 +2,19 @@
 
 Project with PostgresSQL for controlling stock of products.
 
-## Endpoints
+## Technologies
+
+- FastAPI
+- PostgresSQL
+- ReactJS (with TypeScript)
+
+## Design
+
+<img src="./assets/layout-3.png">
+<img src="./assets/layout-2.png">
+<img src="./assets/layout-1.png">
+
+## API Endpoints
 
 For see all the documentation on swagger access `/docs` endpoint.
 

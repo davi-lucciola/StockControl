@@ -16,8 +16,8 @@ export function ProductsList() {
   const { setStockPayload } = useStock();
   const [filterIsOpen, setFilterIsOpen] = useState<boolean>(false);
 
-  const handleOpenUpdateModal = (productPayload: ProductPayload) => {
-    setProductPayload(productPayload);
+  const handleOpenUpdateModal = (productPayloadData: ProductPayload) => {
+    setProductPayload(productPayloadData);
   };
 
   const handleChangeStock = (productId: number, stockType: StockType) => {

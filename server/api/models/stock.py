@@ -1,4 +1,4 @@
-from typing import Any, Dict, Literal, Tuple
+from typing import Literal
 from datetime import datetime as dt
 from sqlmodel import Relationship, SQLModel, Field
 from api.models.product import Product

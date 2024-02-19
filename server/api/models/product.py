@@ -14,7 +14,10 @@ class Product(SQLModel, table=True):
     price: float
     amount: int = 0
 
-    stocks: list['Stock'] = Relationship(back_populates='product')
+    stocks: list['Stock'] = Relationship(
+        sa_relationship_kwargs={"cascade": "delete"}, 
+        back_populates='product'
+    )
 
     def update(self, product: 'Product'):
         self.name = product.name

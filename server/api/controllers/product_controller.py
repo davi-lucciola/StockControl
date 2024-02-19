@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends 
+from fastapi import APIRouter, Depends 
 from api.models import Product, ProductBase, ProductFilter
 from api.services import ProductService
 

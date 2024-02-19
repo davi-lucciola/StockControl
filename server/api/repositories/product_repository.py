@@ -1,8 +1,6 @@
 from http import HTTPStatus
-from itertools import product
 from sqlmodel import Session, col, select
 from fastapi import Depends, HTTPException
-from functools import reduce
 from dataclasses import dataclass
 from api.db import get_db
 from api.models import Product, ProductBase, ProductFilter
@@ -58,7 +56,8 @@ class ProductRepository:
         try:
             self.db.commit()
             return product_in_db.id
-        except:
+        except Exception as err:
+            print(err)
             raise HTTPException(
                 detail='Não foi possivel editar o produto.', 
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR
@@ -66,6 +65,7 @@ class ProductRepository:
             
     def delete(self, id: int) -> None:
         product = self.find_by_id(id)
+        print(product)
         self.db.delete(product)
         try:
             self.db.commit()

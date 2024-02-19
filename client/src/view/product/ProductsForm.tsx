@@ -28,7 +28,7 @@ export function ProductsForm({
           name: "",
           price: 0.0,
         }),
-      1000,
+      500,
     );
 
   return (
@@ -39,6 +39,7 @@ export function ProductsForm({
       onClose={onCloseProductForm}
     >
       <form
+        autoComplete="off"
         onSubmit={
           productPayload.productId ? handleUpdateProduct : handleCreateProduct
         }

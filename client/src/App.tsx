@@ -10,13 +10,17 @@ import "react-toastify/ReactToastify.css";
 export function App() {
   return (
     <>
-      <StockContextProvider stockService={new StockService()}>
-        <StockList />
-        <ProductContextProvider productService={new ProductService()}>
+      <ProductContextProvider productService={new ProductService()}>
+        <StockContextProvider stockService={new StockService()}>
+          <StockList />
           <ProductsList />
-        </ProductContextProvider>
-      </StockContextProvider>
-      <ToastContainer />
+        </StockContextProvider>
+      </ProductContextProvider>
+      <ToastContainer
+        position="bottom-right"
+        pauseOnHover={false}
+        pauseOnFocusLoss={false}
+      />
     </>
   );
 }

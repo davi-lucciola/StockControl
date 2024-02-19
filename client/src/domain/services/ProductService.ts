@@ -1,9 +1,14 @@
 import { AxiosError } from "axios";
-import { api } from "../../api/api";
-import { HttpError } from "../errors/HttpError";
+import { api } from "../../api";
 import { IProductService } from "../interfaces/IProduct";
 import { Product, ProductFilter, ProductPayload } from "../models/Product";
-import { HTTP_STATUS, SuccessResponse, getHttpError } from "../../api/http";
+import {
+  HTTP_STATUS,
+  HttpError,
+  MessageResponse,
+  SuccessResponse,
+  getHttpError,
+} from "../../api/http";
 
 export class ProductService implements IProductService {
   async fetchProducts(filter: ProductFilter): Promise<Product[]> {
@@ -40,9 +45,9 @@ export class ProductService implements IProductService {
   async updateProduct(
     productId: number,
     productPayload: ProductPayload,
-  ): Promise<Response> {
+  ): Promise<MessageResponse> {
     try {
-      const { data } = await api.put<Response>(
+      const { data } = await api.put<MessageResponse>(
         `/product/${productId}`,
         productPayload,
       );
@@ -56,9 +61,11 @@ export class ProductService implements IProductService {
     }
   }
 
-  async deleteProduct(productId: number): Promise<Response> {
+  async deleteProduct(productId: number): Promise<MessageResponse> {
     try {
-      const { data } = await api.delete(`/product/${productId}`);
+      const { data } = await api.delete<MessageResponse>(
+        `/product/${productId}`,
+      );
       return data;
     } catch (error) {
       if (error instanceof AxiosError) {

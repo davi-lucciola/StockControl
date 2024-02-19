@@ -1,12 +1,13 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { Stock, StockFilter, StockPaylod } from "../../domain/models/Stock";
 import { IStockService } from "../../domain/interfaces/IStock";
+import { useProduct } from "../hooks/useProduct";
 
 export type StockContextData = {
   stocks: Stock[];
-  getStocks: (stockFilter: StockFilter) => Promise<void>;
-  addStock(stockPayload: StockPaylod): Promise<void>;
-  removeStock(stockPayload: StockPaylod): Promise<void>;
+  getStocks: (stockFilter?: StockFilter) => Promise<void>;
+  addStock(stockPayload: StockPaylod): Promise<string>;
+  removeStock(stockPayload: StockPaylod): Promise<string>;
   stockPayload: StockPaylod;
   setStockPayload: (stockPayload: StockPaylod) => void;
 };
@@ -23,30 +24,58 @@ export function StockContextProvider({
   stockService,
 }: StockContextProps) {
   const [stocks, setStocks] = useState<Stock[]>([]);
+  const { products, loadProducts } = useProduct();
   const [stockPayload, setStockPayload] = useState<StockPaylod>({
     productId: undefined,
     quantity: undefined,
+    type: undefined,
   });
 
   const loadStocks = async (stockData: Stock[]) => {
-    setStocks(stockData);
+    setStocks(stockData.reverse());
   };
 
-  const getStocks = async (stockFilter: StockFilter) => {
+  const getStocks = async (stockFilter: StockFilter = {}) => {
     const stocksData = await stockService.fetchStocks(stockFilter);
     loadStocks(stocksData);
   };
 
   const addStock = async (stockPayload: StockPaylod) => {
-    await stockService.registerStockIn(stockPayload);
+    const { detail } = await stockService.registerStockIn(stockPayload);
+
+    const product = products.find(
+      (product) => product.id == stockPayload.productId,
+    )!;
+
+    product.amount += stockPayload.quantity!;
+
+    loadProducts([
+      product,
+      ...products.filter((product) => product.id != stockPayload.productId),
+    ]);
+
+    return detail;
   };
 
   const removeStock = async (stockPayload: StockPaylod) => {
-    await stockService.registerStockOut(stockPayload);
+    const { detail } = await stockService.registerStockOut(stockPayload);
+
+    const product = products.find(
+      (product) => product.id == stockPayload.productId,
+    )!;
+
+    product.amount -= stockPayload.quantity!;
+
+    loadProducts([
+      product,
+      ...products.filter((product) => product.id != stockPayload.productId),
+    ]);
+
+    return detail;
   };
 
   useEffect(() => {
-    getStocks({} as StockFilter);
+    getStocks();
   }, []);
 
   return (

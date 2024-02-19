@@ -9,14 +9,17 @@ export type Stock = {
   timestamp: number;
 };
 
+export type StockType = "INPUT" | "OUTPUT";
+
 export type StockFilter = {
-  type?: "INPUT" | "OUTPUT";
+  type?: StockType;
   minDate?: Date;
   maxDate?: Date;
   productId?: number;
 };
 
 export type StockPaylod = {
-  quantity?: number;
   productId?: number;
+  quantity?: number;
+  type?: StockType;
 };

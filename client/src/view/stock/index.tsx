@@ -1,17 +1,27 @@
+import { MODAL_TYPES } from "../components/Modal/types";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import { useState } from "react";
 import { useStock } from "../../controller/hooks/useStock";
-// import { StocksForm } from "./StocksForm";
-// import { useProduct } from "../../controller/hooks/useProduct";
+import { StocksForm } from "./StocksForm";
+import { useProduct } from "../../controller/hooks/useProduct";
 
 export function StockList() {
-  const { stocks } = useStock();
+  const { products } = useProduct();
+  const { stocks, stockPayload } = useStock();
   const [sideBarOpen, setSideBarOpen] = useState(true);
+
+  const productInForm = products
+    ? products.find((product) => product.id == stockPayload.productId)
+    : undefined;
 
   return (
     <>
-      <div className="vh-100 d-flex flex-row align-items-center">
+      <div
+        data-bs-theme="dark"
+        className="vh-100 d-flex flex-row align-items-center"
+      >
         <aside
-          className={`h-100 collapse show collapse-horizontal bg-dark text-white p-4`}
+          className={`h-100 collapse show collapse-horizontal bg-dark text-white p-4 overflow-y-auto`}
           id="sidebar"
         >
           <h1 className="fs-3"> Movimentações </h1>
@@ -57,10 +67,14 @@ export function StockList() {
           aria-expanded={sideBarOpen}
           onClick={() => setSideBarOpen(!sideBarOpen)}
         >
-          {sideBarOpen ? "<" : ">"}
+          {sideBarOpen ? <CaretLeft size={20} /> : <CaretRight size={20} />}
         </button>
       </div>
-      {/* <StocksForm /> */}
+      <StocksForm
+        id={MODAL_TYPES.changeStockForm}
+        product={productInForm}
+        stockPayload={stockPayload}
+      />
     </>
   );
 }

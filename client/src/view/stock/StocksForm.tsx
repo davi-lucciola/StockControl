@@ -1,36 +1,69 @@
-import { useEffect, useState } from "react";
 import { useStock } from "../../controller/hooks/useStock";
 import { Modal } from "../components/Modal";
-import { MODAL_TYPES } from "../components/Modal/types";
-import { StocksTable } from "./StocksTable";
-import { Stock } from "../../domain/models/Stock";
+import { ModalCloseButton } from "../components/Modal/ModalCloseButton";
+import { Product } from "../../domain/models/Product";
+import { StockPaylod } from "../../domain/models/Stock";
 
-export function StocksForm() {
-  const [productStock, setProductStock] = useState<Stock[]>([]);
-  const { stockPayload, setStockPayload, getStocks } = useStock();
+type StocksFormProps = {
+  id: string;
+  product?: Product;
+  stockPayload: StockPaylod;
+};
 
-  // const onOpenStockForm = async () => {
-  //   const stocks = await getStocks({ productId: stockPayload.productId });
-  //   setProductStock(stocks);
-  // };
+export function StocksForm({ id, product, stockPayload }: StocksFormProps) {
+  const {
+    setStockPayload,
+    handleInputChange,
+    handleAddStock,
+    handleRemoveStock,
+  } = useStock();
 
-  const onCloseStockForm = () => {
-    setStockPayload({
-      productId: undefined,
-      quantity: 0,
-    });
-  };
+  const onCloseStockForm = () =>
+    setTimeout(
+      () =>
+        setStockPayload({
+          productId: undefined,
+          quantity: 0,
+        }),
+      500,
+    );
 
   return (
     <Modal
-      id={MODAL_TYPES.detailProductStock}
-      className="modal-xl"
-      title={`Movimentações`}
+      id={id}
+      title={`${product ? product.name : ""} - ${stockPayload.type == "INPUT" ? "Entrada" : "Saída"}`}
       onClose={onCloseStockForm}
     >
-      <div className="container modal-body p-5">
-        <StocksTable stocks={productStock} />
-      </div>
+      <form
+        onSubmit={
+          stockPayload.type == "INPUT" ? handleAddStock : handleRemoveStock
+        }
+        autoComplete="off"
+      >
+        <div className="modal-body">
+          <div className="w-100 d-flex flex-column">
+            <label htmlFor="name" className="form-label">
+              Quantidade
+            </label>
+            <input
+              id="quantity"
+              type="number"
+              className="form-control"
+              name="quantity"
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+        <div className="modal-footer">
+          <ModalCloseButton
+            onClick={onCloseStockForm}
+            type="submit"
+            className="btn btn-primary"
+          >
+            {stockPayload.type == "INPUT" ? "Adicionar" : "Remover"}
+          </ModalCloseButton>
+        </div>
+      </form>
     </Modal>
   );
 }

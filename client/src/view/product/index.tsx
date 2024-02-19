@@ -8,21 +8,23 @@ import { MODAL_TYPES } from "../components/Modal/types";
 import { ProductsFilter } from "./ProductsFilter";
 import { ProductPayload } from "../../domain/models/Product";
 import { useStock } from "../../controller/hooks/useStock";
+import { StockType } from "../../domain/models/Stock";
 
 export function ProductsList() {
   const { products, handleDeleteProduct, productPayload, setProductPayload } =
     useProduct();
-  const { stockPayload, setStockPayload } = useStock();
+  const { setStockPayload } = useStock();
   const [filterIsOpen, setFilterIsOpen] = useState<boolean>(false);
 
   const handleOpenUpdateModal = (productPayload: ProductPayload) => {
     setProductPayload(productPayload);
   };
 
-  const handleOpenDetailStockModal = (productId: number) => {
+  const handleChangeStock = (productId: number, stockType: StockType) => {
     setStockPayload({
-      ...stockPayload,
       productId: productId,
+      quantity: 0,
+      type: stockType,
     });
   };
 
@@ -36,7 +38,7 @@ export function ProductsList() {
           >
             <ModalOpenButton
               type="button"
-              targetId={MODAL_TYPES.createProduct}
+              targetId={MODAL_TYPES.productForm}
               className="btn btn-dark d-flex gap-3 align-items-center"
             >
               Adicionar Produto {<Package size={32} />}
@@ -60,16 +62,12 @@ export function ProductsList() {
             products={products}
             onEdit={handleOpenUpdateModal}
             onDelete={handleDeleteProduct}
-            onDetailStock={handleOpenDetailStockModal}
+            onChangeStock={handleChangeStock}
           />
         </main>
       </div>
       <ProductsForm
-        id={MODAL_TYPES.createProduct}
-        productPayload={productPayload}
-      />
-      <ProductsForm
-        id={MODAL_TYPES.updateProduct}
+        id={MODAL_TYPES.productForm}
         productPayload={productPayload}
       />
     </>

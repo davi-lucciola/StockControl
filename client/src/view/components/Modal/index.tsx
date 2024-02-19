@@ -17,13 +17,11 @@ export function Modal({ id, className, onClose, title, children }: ModalProps) {
             <h1 className="modal-title fs-5" id={`${id}-label`}>
               {title}
             </h1>
-            {
-              <ModalCloseButton
-                onClick={onClose}
-                type="button"
-                className="btn-close"
-              />
-            }
+            <ModalCloseButton
+              onClick={onClose}
+              type="button"
+              className="btn-close"
+            />
           </div>
           {children}
         </div>

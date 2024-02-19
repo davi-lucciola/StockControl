@@ -1,5 +1,4 @@
 import { AxiosError } from "axios";
-import { HttpError, HttpWarning } from "../domain/errors/HttpError";
 
 export const HTTP_STATUS = {
   OK: 200,
@@ -8,15 +7,14 @@ export const HTTP_STATUS = {
   UNPROCESSABLE_ENTITY: 422,
   INTERNAL_SERVER_ERROR: 500,
 };
-
-class Response {
+export class MessageResponse {
   detail: string;
   public constructor(detail: string) {
     this.detail = detail;
   }
 }
 
-export class SuccessResponse extends Response {
+export class SuccessResponse extends MessageResponse {
   createdId;
   public constructor(detail: string, createdId: number) {
     super(detail);
@@ -24,10 +22,12 @@ export class SuccessResponse extends Response {
   }
 }
 
-export class ErrorResponse extends Response {}
+export class HttpError extends Error {}
+export class HttpWarning extends Error {}
+export class ErrorResponse extends MessageResponse {}
 
 export const getHttpError = (error: AxiosError<ErrorResponse>) => {
-  console.log(error.response!.status);
+  console.log(error);
   if (error.response!.status < HTTP_STATUS.INTERNAL_SERVER_ERROR) {
     throw new HttpWarning(error.response?.data.detail);
   } else if (error.response!.status >= HTTP_STATUS.INTERNAL_SERVER_ERROR) {

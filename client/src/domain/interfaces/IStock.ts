@@ -1,8 +1,8 @@
-import { Response } from "../../api/http";
+import { MessageResponse } from "../../api/http";
 import { Stock, StockFilter, StockPaylod } from "../models/Stock";
 
 export interface IStockService {
   fetchStocks(stockFilter: StockFilter): Promise<Stock[]>;
-  registerStockIn(stockPayload: StockPaylod): Promise<Response>;
-  registerStockOut(stockPayload: StockPaylod): Promise<Response>;
+  registerStockIn(stockPayload: StockPaylod): Promise<MessageResponse>;
+  registerStockOut(stockPayload: StockPaylod): Promise<MessageResponse>;
 }

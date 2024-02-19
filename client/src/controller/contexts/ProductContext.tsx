@@ -8,6 +8,7 @@ import { IProductService } from "../../domain/interfaces/IProduct";
 
 export type IProductContextData = {
   products: Product[];
+  loadProducts: (products: Product[]) => void;
   getProducts: (filter: ProductFilter) => Promise<void>;
   createProduct: (productPayload: ProductPayload) => Promise<string>;
   updateProduct: (
@@ -46,6 +47,8 @@ export function ProductContextProvider({
   };
 
   const createProduct = async (productPayload: ProductPayload) => {
+    productPayload.price = Number(productPayload.price);
+
     const { detail, createdId } =
       await productService.createProduct(productPayload);
     const productsData = [
@@ -60,6 +63,8 @@ export function ProductContextProvider({
     productId: number,
     productPayload: ProductPayload,
   ) => {
+    productPayload.price = Number(productPayload.price);
+
     const { detail } = await productService.updateProduct(
       productId,
       productPayload,
@@ -95,6 +100,7 @@ export function ProductContextProvider({
     <ProductContext.Provider
       value={{
         products,
+        loadProducts,
         getProducts,
         createProduct,
         updateProduct,

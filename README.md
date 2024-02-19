@@ -7,6 +7,7 @@ Project with PostgresSQL for controlling stock of products.
 - FastAPI
 - PostgresSQL
 - ReactJS (with TypeScript)
+- Bootstrap
 
 ## Design
 

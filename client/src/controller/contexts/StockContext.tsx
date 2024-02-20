@@ -37,7 +37,7 @@ export function StockContextProvider({
 
   const getStocks = async (stockFilter: StockFilter = {}) => {
     const stocksData = await stockService.fetchStocks(stockFilter);
-    loadStocks(stocksData.reverse());
+    loadStocks(stocksData);
   };
 
   const addStock = async (stockPayload: StockPaylod) => {

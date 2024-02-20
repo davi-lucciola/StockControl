@@ -1,7 +1,8 @@
 from http import HTTPStatus
+import logging
 from fastapi import Depends, HTTPException
 from dataclasses import dataclass
-from sqlmodel import Session, select
+from sqlmodel import Session, desc, select
 from api.models import Stock, StockFilter
 from api.db import get_db
 
@@ -25,7 +26,7 @@ class StockRepository:
         if filter.max_date is not None:
             stmt = stmt.where(Stock.timestamp <= Stock.get_timestamp(filter.min_date))
 
-        stocks = self.db.exec(stmt).all()
+        stocks = self.db.exec(stmt.order_by(desc(Stock.timestamp))).all()
 
         return stocks
 
@@ -34,7 +35,8 @@ class StockRepository:
             self.db.add(stock)
             self.db.commit()
             return stock.id
-        except:
+        except Exception as err:
+            logging.error(err)
             raise HTTPException(
                 detail='Não foi possivel adicionar movimentação de estoque', 
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR

@@ -35,33 +35,38 @@ class ProductService:
                 status_code=HTTPStatus.UNPROCESSABLE_ENTITY
             )
 
-        product_in_db: Product = self.product_repository.find_by_name(product.name.capitalize())
+        product_in_db: Product = self.product_repository.find_by_name(product.name.title())
         if product_in_db is not None:
             raise HTTPException(
                 detail='Esse produto já está cadastrado.', 
                 status_code=HTTPStatus.BAD_REQUEST
             )
 
-        return self.product_repository.create(product)
+        product: Product = Product(**product.model_dump())
+        product.name = product.name.title()
+        return self.product_repository.save(product)
     
-    async def update(self, id: int, product: ProductBase) -> None:
+    async def update(self, id: int, product: ProductBase) -> Product:
         if len(product.name.strip()) == 0:
             raise HTTPException(
                 detail='O campo nome é obrigatório.', 
                 status_code=HTTPStatus.UNPROCESSABLE_ENTITY
             )
 
-        await self.get_by_id(id)
-        product_in_db: Product = self.product_repository.find_by_name(product.name.capitalize())
-        if product_in_db is not None and product_in_db.id != id:
+        product_in_db: Product = await self.get_by_id(id)
+        product_with_same_name: Product = (self.product_repository
+            .find_by_name(product.name.title()))
+        
+        if (product_with_same_name is not None and product_with_same_name.id != id):
             raise HTTPException(
                 detail='Esse produto já está cadastrado.', 
                 status_code=HTTPStatus.BAD_REQUEST
             )
 
-        return self.product_repository.update(Product(id=id, **product.model_dump()))
+        product_in_db.update(Product(**product.model_dump()))
+        return self.product_repository.save(product_in_db)
     
     async def delete(self, id: int) -> None:
-        await self.get_by_id(id)
-        self.product_repository.delete(id)
+        product = await self.get_by_id(id)
+        self.product_repository.delete(product)
         

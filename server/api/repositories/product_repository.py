@@ -1,9 +1,10 @@
 from http import HTTPStatus
+import logging
 from sqlmodel import Session, col, select
 from fastapi import Depends, HTTPException
 from dataclasses import dataclass
 from api.db import get_db
-from api.models import Product, ProductBase, ProductFilter
+from api.models import Product, ProductFilter
 
 
 @dataclass
@@ -35,41 +36,25 @@ class ProductRepository:
         product = self.db.exec(stmt).one_or_none()
         return product
 
-    def create(self, product: ProductBase) -> Product:
-        product.name = product.name.capitalize()
-        product: Product = Product(**product.model_dump())
-        
+    def save(self, product: Product) -> Product:        
         try:
-            self.db.add(product)
+            if product.id is None:
+                self.db.add(product)
             self.db.commit()
             return product
-        except:
-            raise HTTPException(
-                detail='Não foi possivel cadastrar o produto.', 
-                status_code=HTTPStatus.INTERNAL_SERVER_ERROR
-            )
-    
-    def update(self, product: Product) -> int:
-        product_in_db: Product = self.find_by_id(product.id)
-        product_in_db.update(product)
-
-        try:
-            self.db.commit()
-            return product_in_db.id
         except Exception as err:
-            print(err)
+            logging.error(err)
             raise HTTPException(
-                detail='Não foi possivel editar o produto.', 
+                detail='Não foi possivel salvar o produto.', 
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR
             )
             
-    def delete(self, id: int) -> None:
-        product = self.find_by_id(id)
-        print(product)
-        self.db.delete(product)
+    def delete(self, product: Product) -> None:
         try:
+            self.db.delete(product)
             self.db.commit()
-        except:
+        except Exception as err:
+            logging.error(err)
             raise HTTPException(
                 detail='Não foi possivel excluir o produto.', 
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR

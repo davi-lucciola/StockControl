@@ -40,7 +40,7 @@ class StockService:
             )
 
         product.amount += stock_register.quantity
-        self.product_repository.update(product)
+        self.product_repository.save(product)
         
         stock = Stock(type='INPUT', **stock_register.model_dump())
         self.stock_repository.save_register(stock) 
@@ -73,7 +73,7 @@ class StockService:
             )
 
         product.amount -= stock_register.quantity
-        self.product_repository.update(product)
+        self.product_repository.save(product)
         
         stock = Stock(type='OUTPUT', **stock_register.model_dump())
         self.stock_repository.save_register(stock) 

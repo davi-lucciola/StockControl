@@ -1,7 +1,6 @@
 from http import HTTPStatus
 from fastapi import FastAPI, Request, Response
 from fastapi.encoders import jsonable_encoder
-from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from .controllers import product_router, stock_router
@@ -10,17 +9,14 @@ from .controllers import product_router, stock_router
 def create_app(title: str) -> FastAPI:
     app = FastAPI(title=title)
 
-    @app.exception_handler(RequestValidationError)
-    async def http_exception_accept_handler(
+    @app.exception_handler(Exception)
+    async def generic_http_exception_handler(
         request: Request, 
-        exc: RequestValidationError
+        exc: Exception
     ) -> Response:
-        raw_errors = exc.errors()
-        print(raw_errors)
-        overwritten_errors = raw_errors.errors()
         return JSONResponse(
-            status_code=HTTPStatus.UNPROCESSABLE_ENTITY,
-            content={"detail": jsonable_encoder(overwritten_errors)},
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            content={"detail": jsonable_encoder(exc.args[0])},
         )
 
     app.add_middleware(

@@ -23,24 +23,12 @@ export function useStock() {
 
   const handleAddStock = async (event: FormEvent) => {
     event.preventDefault();
-    const result = await handleRequest(
-      async () => await addStock(stockPayload),
-    );
-
-    if (result) {
-      getStocks();
-    }
+    await handleRequest(async () => await addStock(stockPayload));
   };
 
   const handleRemoveStock = async (event: FormEvent) => {
     event.preventDefault();
-    const result = await handleRequest(
-      async () => await removeStock(stockPayload),
-    );
-
-    if (result) {
-      getStocks();
-    }
+    await handleRequest(async () => await removeStock(stockPayload));
   };
 
   return {

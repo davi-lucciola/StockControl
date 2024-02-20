@@ -37,7 +37,7 @@ export function StockContextProvider({
 
   const getStocks = async (stockFilter: StockFilter = {}) => {
     const stocksData = await stockService.fetchStocks(stockFilter);
-    loadStocks(stocksData);
+    loadStocks(stocksData.reverse());
   };
 
   const addStock = async (stockPayload: StockPaylod) => {
@@ -76,7 +76,7 @@ export function StockContextProvider({
 
   useEffect(() => {
     getStocks();
-  }, [deleteProduct]);
+  }, [deleteProduct, addStock, removeStock]);
 
   return (
     <StockContext.Provider

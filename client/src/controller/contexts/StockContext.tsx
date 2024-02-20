@@ -76,7 +76,7 @@ export function StockContextProvider({
 
   useEffect(() => {
     getStocks();
-  }, [deleteProduct, addStock, removeStock]);
+  }, [deleteProduct]);
 
   return (
     <StockContext.Provider

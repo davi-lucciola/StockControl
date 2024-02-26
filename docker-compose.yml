@@ -7,6 +7,8 @@ services:
       context: ./server
     ports:
       - "8080:8080"
+    depends_on:
+      - db
     
   web:
     container_name: stockcontrol-web
@@ -14,6 +16,9 @@ services:
       context: ./client
     ports:
       - "5173:5173"
+    depends_on:
+      - db
+      - api
 
   db:
     image: postgres:latest

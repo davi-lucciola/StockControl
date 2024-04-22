@@ -22,6 +22,10 @@ Project with PostgresSQL for controlling stock of products.
 
 Based in MVVM, the frontend are divided in 3 layers:
 
+- view
+- controller
+- domain
+
 #### View
 
 This layer is the UI layer, this layer was divided in 2 moudules / main components: products and stocks
@@ -32,11 +36,11 @@ When the states change, are controlled by the "Controller" layer.
 #### Controller
 
 This layer are divided in 2 parts, context and hooks. The contexts stores the application states, and the hooks give to the view the functions that will change the states
-The hook function are DOM Event Handlers.
+The hook function are DOM Event Handlers. This layer is similar with "ViewModel" layer.
 
 #### Domain
 
-This layer is where we have the Domain (Business) Models, Payloads Models, and API Comunication Service.
+This layer is where we have the Domain (Business) Models, Payloads Models, and API Comunication Service. Is similar with "Model" layer.
 
 ## Backend
 
